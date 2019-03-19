@@ -203,11 +203,13 @@ pip3 install bio-minos==0.5.1
 cd $install_root
 wget https://github.com/refresh-bio/KMC/releases/download/v3.0.0/KMC3.linux.tar.gz
 tar xf KMC3.linux.tar.gz
+rm KMC3.linux.tar.gz
 
 
 #____________________ bayesTyper ____________________________#
 cd $install_root
 wget https://github.com/bioinformatics-centre/BayesTyper/releases/download/v1.3.1/bayesTyper_v1.3.1_linux_x86_64.tar.gz
 tar xf bayesTyper_v1.3.1_linux_x86_64.tar.gz
+rm bayesTyper_v1.3.1_linux_x86_64.tar.gz
 cp -s bayesTyper_v1.3.1_linux_x86_64/bin/* .
 
