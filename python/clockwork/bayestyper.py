@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 import subprocess
 
 import cluster_vcf_records
@@ -89,7 +90,7 @@ def remove_starred_alts_from_vcf(vcf_in, vcf_out):
                 print(line, end='', file=f_out)
 
 
-def run(ref_fasta, reads_file, vcf_files, outdir, bayestyper=None, kmc=None, bcftools=None, kmc_mem=2):
+def run(ref_fasta, reads_file, vcf_files, outdir, bayestyper=None, kmc=None, bcftools=None, kmc_mem=2, testing=False):
     if bayestyper is None:
         bayestyper = os.environ.get('CLOCKWORK_BAYESTYPER', 'bayesTyper')
     if kmc is None:
@@ -150,18 +151,28 @@ def run(ref_fasta, reads_file, vcf_files, outdir, bayestyper=None, kmc=None, bcf
     command = f'{bayestyper} cluster -v {typertools_combine_out}.vcf.gz -s {samples_tsv} -g {ref_fasta}'
     print('Running bayesTyper cluster:', command, file=f_log)
     utils.syscall(command)
-    # This commented out command is for bayesTyper v1.4.1. But we can't use that version
-    # because it crashes:
-    # https://github.com/bioinformatics-centre/BayesTyper/issues/4
-    # So we're using 1.3.1 instead. 1.3.1 doesn't have the -y option, but
-    # leave the command here as a note for the fuutre.
-    #utils.syscall(f'{bayestyper} genotype -y {ploidy_file} -v bayestyper_unit_1/variant_clusters.bin -c bayestyper_cluster_data -s {samples_tsv} -g {ref_fasta} -o bayestyper_unit_1/bayestyper')
-    command = f'{bayestyper} genotype -v bayestyper_unit_1/variant_clusters.bin -c bayestyper_cluster_data -s {samples_tsv} -g {ref_fasta} -o bayestyper_unit_1/bayestyper'
-    print('Running bayesTyper genotype:', command, file=f_log)
-    utils.syscall(command)
-    bayestyper_vcf = 'bayestyper_unit_1/bayestyper.vcf'
+
+    # Next is to run the genotyper. Can't run this on a small test dataset.
+    # Don't want to wait ages for it to run on real data.
+    # So if we're testing, just copy one of the original VCF files
+    # to be the final fine and then stop
     filtered_bayestyper_vcf = '05.final.vcf'
-    remove_starred_alts_from_vcf(bayestyper_vcf, filtered_bayestyper_vcf)
-    f.close()
+    if testing:
+        random_vcf = list(vcf_files.values())[0]
+        shutil.copyfile(random_vcf, filtered_bayestyper_vcf)
+    else:
+        # This commented out command is for bayesTyper v1.4.1. But we can't use that version
+        # because it crashes:
+        # https://github.com/bioinformatics-centre/BayesTyper/issues/4
+        # So we're using 1.3.1 instead. 1.3.1 doesn't have the -y option, but
+        # leave the command here as a note for the fuutre.
+        #utils.syscall(f'{bayestyper} genotype -y {ploidy_file} -v bayestyper_unit_1/variant_clusters.bin -c bayestyper_cluster_data -s {samples_tsv} -g {ref_fasta} -o bayestyper_unit_1/bayestyper')
+        command = f'{bayestyper} genotype -v bayestyper_unit_1/variant_clusters.bin -c bayestyper_cluster_data -s {samples_tsv} -g {ref_fasta} -o bayestyper_unit_1/bayestyper'
+        print('Running bayesTyper genotype:', command, file=f_log)
+        utils.syscall(command)
+        bayestyper_vcf = 'bayestyper_unit_1/bayestyper.vcf'
+        remove_starred_alts_from_vcf(bayestyper_vcf, filtered_bayestyper_vcf)
+
+    f_log.close()
     os.chdir(cwd)
 
