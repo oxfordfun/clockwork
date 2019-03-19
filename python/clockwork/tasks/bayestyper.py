@@ -13,5 +13,6 @@ def run(options):
         vcf_files,
         options.output_dir,
         kmc_mem=options.kmc_mem,
+        testing=options.testing,
     )
 

@@ -97,10 +97,7 @@ class TestBayestyper(unittest.TestCase):
         os.unlink(tmp_out)
 
 
-    # bayesTyper crashes on small test set, presumably because it
-    # really needs lots of variants to gather whatever stats its using.
-    # So don't run this test.
-    def _test_run(self):
+    def test_run(self):
         '''test run'''
         ref_fasta = os.path.join(data_dir, 'run.ref.fa')
         reads_file = os.path.join(data_dir, 'run.reads.fq')
@@ -108,5 +105,13 @@ class TestBayestyper(unittest.TestCase):
             'tool1': os.path.join(data_dir, 'run.calls.1.vcf'),
             'tool2': os.path.join(data_dir, 'run.calls.2.vcf'),
         }
+        # bayesTyper crashes on small test set, presumably because it
+        # really needs lots of variants to gather whatever stats it's using.
+        # So use the testing option, which runs as much as possible of the
+        # bayestyper workflow, then just copies one of the input VCF files
+        # to be the final output file
         outdir = 'tmp.bayestyper.run.out'
-        bayestyper.run(ref_fasta, reads_file, vcf_files, outdir)
+        bayestyper.run(ref_fasta, reads_file, vcf_files, outdir, testing=True)
+        self.assertTrue(os.path.exists(os.path.join(outdir, '05.final.vcf')))
+        shutil.rmtree(outdir)
+
