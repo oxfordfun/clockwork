@@ -31,6 +31,8 @@ class TestNextflowVarcall(unittest.TestCase):
         self.assertEqual(expect_rmdup_bam, os.path.exists(os.path.join(samtools_dir, 'rmdup.bam')))
         self.assertTrue(os.path.exists(samtools_vcf))
         self.assertEqual(expected_sample, vcf_to_sample(samtools_vcf))
+        bayestyper_vcf = os.path.join(pipeline_dir, 'bayestyper', '05.final.vcf')
+        self.assertTrue(os.path.exists(bayestyper_vcf))
         cortex_dir = os.path.join(pipeline_dir, 'cortex')
         self.assertTrue(os.path.exists(os.path.join(cortex_dir, 'cortex.in.fofn')))
         self.assertTrue(os.path.exists(os.path.join(cortex_dir, 'cortex.in.index')))

@@ -75,6 +75,12 @@ if (params.help){
     exit 0
 }
 
+if (params.testing) {
+    test_opt_string = '--testing'
+}
+else {
+    test_opt_string = ''
+}
 
 using_db_input = params.pipeline_root != "" && params.references_root != "" && params.db_config_file != "" && params.ref_id != ""
 using_reads_input = params.ref_dir != "" && params.reads_in1 != "" && params.reads_in2 != "" && params.output_dir != "" && params.sample_name != ""
@@ -302,7 +308,7 @@ process call_vars_cortex {
 call_vars_joined_channel = combine_variant_calls_channel_from_samtools.join(combine_variant_calls_channel_from_cortex, by:0)
 
 
-process combine_variant_calls_minos {
+process combine_variant_calls {
     maxForks params.max_forks_combine_variant_calls
     memory { 5.GB * task.attempt }
     if (using_db_input) {
@@ -320,9 +326,17 @@ process combine_variant_calls_minos {
     """
     rm -rf ${tsv_fields.output_dir}/minos
     cortex_vcf=\$(find ${tsv_fields.output_dir}/cortex/cortex.out/vcfs/ -name "*FINAL*raw.vcf")
-    minos adjudicate --max_read_length ${params.minos_max_read_length} --force --reads rmdup.bam minos ${tsv_fields.reference_dir}/ref.fa ${tsv_fields.output_dir}/samtools/samtools.vcf \$cortex_vcf
+    /usr/bin/env time -v minos adjudicate --max_read_length ${params.minos_max_read_length} --force --reads rmdup.bam minos ${tsv_fields.reference_dir}/ref.fa ${tsv_fields.output_dir}/samtools/samtools.vcf \$cortex_vcf &> minos.stdouterr
     rsync -av minos/ ${tsv_fields.output_dir}/minos
-    rm -r minos
+    rsync -av minos.stdouterr ${tsv_fields.output_dir}/
+    rm -r minos minos.stdouterr
+    echo "cortex \$cortex_vcf" > vcfs.tsv
+    echo "samtools ${tsv_fields.output_dir}/samtools/samtools.vcf" >> vcfs.tsv
+    sed -i 's/ /\t/g' vcfs.tsv
+    /usr/bin/env time -v clockwork bayestyper ${test_opt_string} ${tsv_fields.reference_dir}/ref.fa rmdup.bam vcfs.tsv bayestyper &> bayestyper.stdouterr
+    rsync -av bayestyper/ ${tsv_fields.output_dir}/bayestyper
+    rsync -av bayestyper.stdouterr ${tsv_fields.output_dir}/
+    rm -r bayestyper bayestyper.stdouterr
     """
 }
 
