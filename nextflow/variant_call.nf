@@ -326,14 +326,14 @@ process combine_variant_calls {
     """
     rm -rf ${tsv_fields.output_dir}/minos
     cortex_vcf=\$(find ${tsv_fields.output_dir}/cortex/cortex.out/vcfs/ -name "*FINAL*raw.vcf")
-    /usr/bin/env time -v minos adjudicate --max_read_length ${params.minos_max_read_length} --force --reads rmdup.bam minos ${tsv_fields.reference_dir}/ref.fa ${tsv_fields.output_dir}/samtools/samtools.vcf \$cortex_vcf &> minos.stdouterr
+    /usr/bin/time -v minos adjudicate --max_read_length ${params.minos_max_read_length} --force --reads rmdup.bam minos ${tsv_fields.reference_dir}/ref.fa ${tsv_fields.output_dir}/samtools/samtools.vcf \$cortex_vcf &> minos.stdouterr
     rsync -av minos/ ${tsv_fields.output_dir}/minos
     rsync -av minos.stdouterr ${tsv_fields.output_dir}/
     rm -r minos minos.stdouterr
     echo "cortex \$cortex_vcf" > vcfs.tsv
     echo "samtools ${tsv_fields.output_dir}/samtools/samtools.vcf" >> vcfs.tsv
     sed -i 's/ /\t/g' vcfs.tsv
-    /usr/bin/env time -v clockwork bayestyper ${test_opt_string} ${tsv_fields.reference_dir}/ref.fa rmdup.bam vcfs.tsv bayestyper &> bayestyper.stdouterr
+    /usr/bin/time -v clockwork bayestyper ${test_opt_string} ${tsv_fields.reference_dir}/ref.fa rmdup.bam vcfs.tsv bayestyper &> bayestyper.stdouterr
     rsync -av bayestyper/ ${tsv_fields.output_dir}/bayestyper
     rsync -av bayestyper.stdouterr ${tsv_fields.output_dir}/
     rm -r bayestyper bayestyper.stdouterr
