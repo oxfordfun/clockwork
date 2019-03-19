@@ -1,4 +1,5 @@
 __all__ = [
+    'bayestyper',
     'cortex',
     'db_add_mykrobe_panel',
     'db_finished_pipeline_update',

@@ -11,6 +11,23 @@ parser = argparse.ArgumentParser(
 )
 subparsers = parser.add_subparsers(title='Available tasks', help='', metavar='')
 
+
+#--------------------------- bayestyper ------------------------------
+subparser_bayestyper = subparsers.add_parser(
+    'bayestyper',
+    help='Runs bayestyper',
+    usage='clockwork bayestyper [options] <reference FASTA> <reads file> <file of VCF filenames> <output dir>',
+    description='Runs bayestyper',
+)
+
+subparser_bayestyper.add_argument('--kmc_mem', type=float, help='Memory in GB to use when running KMC [%(default)s]', default=2, metavar='FLOAT')
+subparser_bayestyper.add_argument('ref_fasta', help='Reference FASTA file. .fai file must also exist')
+subparser_bayestyper.add_argument('reads_file', help='File containing reads (must be .bam, .fq[.gz], or .fastq[.gz])')
+subparser_bayestyper.add_argument('vcf_file_list', help='TAB-delimited file containing list of VCF files. One line per file. Col1=tool name, col2=VCF filename')
+subparser_bayestyper.add_argument('output_dir', help='Name of output directory')
+subparser_bayestyper.set_defaults(func=clockwork.tasks.bayestyper.run)
+
+
 #----------------------------- cortex --------------------------------
 subparser_cortex = subparsers.add_parser(
     'cortex',
