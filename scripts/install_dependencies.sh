@@ -34,6 +34,7 @@ apt-get install -y \
   python3-setuptools \
   r-base-core \
   rsync \
+  time \
   unzip \
   wget
 
