@@ -90,7 +90,7 @@ def remove_starred_alts_from_vcf(vcf_in, vcf_out):
                 print(line, end='', file=f_out)
 
 
-def run(ref_fasta, reads_file, vcf_files, outdir, bayestyper=None, kmc=None, bcftools=None, kmc_mem=2, testing=False):
+def run(ref_fasta, reads_file, vcf_files, outdir, bayestyper=None, kmc=None, bcftools=None, kmc_mem=12, testing=False):
     if bayestyper is None:
         bayestyper = os.environ.get('CLOCKWORK_BAYESTYPER', 'bayesTyper')
     if kmc is None:

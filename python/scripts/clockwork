@@ -21,7 +21,7 @@ subparser_bayestyper = subparsers.add_parser(
 )
 
 subparser_bayestyper.add_argument('--testing', action='store_true', help='Used for test suite')
-subparser_bayestyper.add_argument('--kmc_mem', type=float, help='Memory in GB to use when running KMC [%(default)s]', default=2, metavar='FLOAT')
+subparser_bayestyper.add_argument('--kmc_mem', type=float, help='Memory in GB to use when running KMC [%(default)s]', default=12, metavar='FLOAT')
 subparser_bayestyper.add_argument('ref_fasta', help='Reference FASTA file. .fai file must also exist')
 subparser_bayestyper.add_argument('reads_file', help='File containing reads (must be .bam, .fq[.gz], or .fastq[.gz])')
 subparser_bayestyper.add_argument('vcf_file_list', help='TAB-delimited file containing list of VCF files. One line per file. Col1=tool name, col2=VCF filename')
