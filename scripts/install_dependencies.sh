@@ -202,9 +202,9 @@ pip3 install bio-minos==0.5.1
 
 #__________________________ KMC3 ____________________________#
 cd $install_root
-wget https://github.com/refresh-bio/KMC/releases/download/v3.0.0/KMC3.linux.tar.gz
-tar xf KMC3.linux.tar.gz
-rm KMC3.linux.tar.gz
+wget https://github.com/refresh-bio/KMC/releases/download/v3.1.0/KMC3.1.0.linux.tar.gz
+tar xf KMC3.1.0.linux.tar.gz
+rm KMC3.1.0.linux.tar.gz
 
 
 #____________________ bayesTyper ____________________________#
