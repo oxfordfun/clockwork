@@ -209,9 +209,9 @@ rm KMC3.1.0.linux.tar.gz
 
 #____________________ bayesTyper ____________________________#
 cd $install_root
-wget https://github.com/bioinformatics-centre/BayesTyper/releases/download/v1.3.1/bayesTyper_v1.3.1_linux_x86_64.tar.gz
-tar xf bayesTyper_v1.3.1_linux_x86_64.tar.gz
-chmod --recursive 755 bayesTyper_v1.3.1_linux_x86_64/
-rm bayesTyper_v1.3.1_linux_x86_64.tar.gz
-cp -s bayesTyper_v1.3.1_linux_x86_64/bin/* .
+wget https://github.com/bioinformatics-centre/BayesTyper/releases/download/v1.5/bayesTyper_v1.5_linux_x86_64.tar.gz
+tar xf bayesTyper_v1.5_linux_x86_64.tar.gz
+chmod --recursive 755 bayesTyper_v1.5_linux_x86_64/
+rm bayesTyper_v1.5_linux_x86_64.tar.gz
+cp -s bayesTyper_v1.5_linux_x86_64/bin/* .
 
