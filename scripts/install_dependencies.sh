@@ -195,4 +195,9 @@ make install
 
 
 #________________________ minos _____________________________#
-pip3 install git+https://github.com/iqbal-lab-org/minos@69d6f91532c4a7b9f3fa65418f39529df8002e7d
+cd $install_root
+pip3 install 'cluster_vcf_records==0.13.1'
+git clone https://github.com/oxfordfun/minos
+cd minos
+git checkout e7165f1a398b1003e82a8aa00480ef5cd65fa834
+pip3 install .
